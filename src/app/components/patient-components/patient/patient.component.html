@@ -1,0 +1,54 @@
+<div class="container mt-3">
+  <!-- Detalles del Paciente -->
+  <div class="card mb-4">
+    <div
+      class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+    >
+      <!-- Título de la cabecera alineado a la izquierda -->
+      <span><strong>Detalles del Paciente</strong></span>
+
+      <!-- Botón alineado a la derecha -->
+      <div class="btn-group" *ngIf="_patientService.patientView.id != 0">
+        <button
+          type="button"
+          class="btn btn-info btn-sm ms-2 radius-per"
+          routerLink="/patient/edit/{{ _patientService.patientView.id }}"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+      </div>
+    </div>
+    <div class="card-body p-4">
+      <!-- Contenedor de detalles del paciente -->
+      <div class="mb-3 border-bottom pb-2">
+        <h6 class="text-primary  mb-1">Nombre:</h6>
+        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.name }}</p>
+      </div>
+    
+      <div class="mb-3 border-bottom pb-2">
+        <h6 class="text-primary mb-1">Apellido:</h6>
+        <p class="fs-5 text-muted  mb-0">{{ _patientService.patientView.lastName }}</p>
+      </div>
+    
+      <div class="mb-3 border-bottom pb-2">
+        <h6 class="text-primary  mb-1">DNI:</h6>
+        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.dni | dniFormat }}</p>
+      </div>
+    
+      <div class="mb-3 border-bottom pb-2">
+        <h6 class="text-primary mb-1">Email:</h6>
+        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.email }}</p>
+      </div>
+    
+      <div class="mb-3">
+        <h6 class="text-primary  mb-1">Teléfono:</h6>
+        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.phone | phoneFormat }}</p>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Lista de Visitas -->
+  <app-visit-list *ngIf="_patientService.visitView.id == 0"></app-visit-list>
+  <app-visit *ngIf="_patientService.visitView.id != 0"></app-visit>
+</div>

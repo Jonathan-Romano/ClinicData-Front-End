@@ -1,0 +1,59 @@
+<div class="container mt-3 p-0">
+  <!-- Detalles de la Visita -->
+  <div class="card mb-4">
+    <div
+      class="card-header bg-success text-white d-flex justify-content-between align-items-center"
+    >
+      <span><strong>Detalles de la Visita</strong> </span>
+      <div class="btn-group">
+        <!-- Botón para editar la visita -->
+        <button
+          style="background-color: #7ed380"
+          type="button"
+          class="btn btn-success btn-sm ms-2"
+          routerLink="visit/edit/{{ _patientService.visitView.id }}"
+          (click)="changePatientId(_patientService.patientView.id!)"
+        >
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cuerpo de la tarjeta -->
+    <div class="card-body">
+      <!-- Información básica de la visita con mejor diseño -->
+      <div class="mb-3">
+        <span class="text-muted"><strong>Fecha:</strong></span>
+        <span class="ms-2">{{
+          _patientService.visitView.date | date : "dd/MM/yyyy"
+        }}</span>
+      </div>
+
+      <div class="mb-3">
+        <span class="text-muted"><strong>Descripción:</strong></span>
+        <div class="ms-2 border p-2 rounded bg-light">
+          {{ _patientService.visitView.description }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <span class="text-muted"><strong>Tratamiento:</strong></span>
+        <div class="ms-2 border p-2 rounded bg-light">
+          {{ _patientService.visitView.treatment }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón de acción -->
+    <div class="d-flex justify-content-start p-3 me-3">
+      <button
+        type="button"
+        class="btn btn-secondary d-flex align-items-center gap-1"
+        (click)="backPatient()"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Volver</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="card mt-3 mb-3">
+  <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+    <!-- Título de la cabecera alineado a la izquierda -->
+    <span class="ms-2"><strong>Lista de visitas</strong></span>
+    <!-- Botón alineado a la derecha -->
+    <button
+      (click)="changePatientId(_patientService.patientView.id!)"
+      *ngIf="_patientService.patientView.id != 0"
+      class="btn btn-success btn-sm ms-2"
+      routerLink="visit/add"
+      style="background-color: #7ed380;"
+    >
+    <i class="fa-solid fa-plus"></i>
+    </button>
+  </div>
+
+  <div class="card-body p-2">
+    <!-- Contenedor para hacer la tabla desplazable en pantallas pequeñas -->
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light text-center">
+          <tr>
+            <th style="width: 5%;"></th>
+            <th style="width: 20%;">Fecha</th>
+            <th style="width: 35%;">Descripción</th>
+            <th style="width: 30%;">Tratamiento</th>
+            <th style="width: 5%;"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Recorre la lista de visitas usando *ngFor -->
+          <tr *ngFor="let visit of _patientService.patientView.visitList; let i = index" class="text-center">
+            <td>
+              <button
+                type="button"
+                class="btn btn-info btn-sm rounded-circle"
+                (click)="getVisitView(visit.id!)"
+                title="Ver Visita"
+              >
+                <i class="fa-solid fa-eye"></i>
+              </button>
+            </td>
+            <td>{{ visit.date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ visit.description | slice: 0: 20 }}...</td>
+            <td>{{ visit.treatment | slice: 0: 20 }}...</td>
+            <td>
+              <button
+                (click)="deleteVisit(visit.id!, _patientService.patientView.id!)"
+                type="button"
+                class="btn btn-danger btn-sm rounded-circle"
+                title="Eliminar Visita"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

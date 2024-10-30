@@ -1,0 +1,70 @@
+<app-progress-bar *ngIf="loading"></app-progress-bar>
+
+<div *ngIf="!loading" class="container mt-3">
+  <!-- Encabezado de la tabla -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0 text-primary"><strong>Pacientes</strong></h4>
+    <button
+      type="button"
+      class="btn btn-primary d-flex align-items-center gap-2"
+      routerLink="/patient/add"
+    >
+      <i class="fa-solid fa-plus"></i>
+      <span>Nuevo Paciente</span>
+    </button>
+  </div>
+
+  <!-- Hacer la tabla desplazable en dispositivos móviles -->
+  <div class="table-responsive shadow-sm rounded">
+    <table
+      *ngIf="_patientService.patients.length > 0"
+      class="table table-hover align-middle"
+    >
+      <thead class="table-primary text-center">
+        <tr>
+          <th scope="col" style="width: 5%;"></th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">DNI</th>
+          <th scope="col" style="width: 5%;"></th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let patient of _patientService.patients">
+        <tr class="table-light text-center">
+          <td class="p-2">
+            <button
+              (click)="getPatientView(patient.id!)"
+              type="button"
+              class="btn btn-info btn-sm rounded-circle"
+              title="Ver Paciente"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </td>
+          <td>{{ patient.name }}</td>
+          <td>{{ patient.lastName }}</td>
+          <td>{{ patient.dni | dniFormat }}</td>
+          <td class="p-2">
+            <button
+              (click)="deletePatient(patient.id!)"
+              type="button"
+              class="btn btn-danger btn-sm rounded-circle"
+              title="Eliminar Paciente"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Mensaje de "No hay pacientes" -->
+  <div
+    *ngIf="_patientService.patients.length == 0"
+    class="alert alert-warning mt-4 text-center"
+    role="alert"
+  >
+    No hay pacientes para mostrar
+  </div>
+</div>
