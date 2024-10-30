@@ -1,4 +1,4 @@
-# ClinicDataFrontEnd
+# FrontEnd-ClinicData
 <p align="center">
 <a href="https://youtu.be/bWbOO4wpbRc"><img src="https://github.com/Jonathan-Romano/Jonathan-Romano/blob/main/assets/ClinicData.png" style="height: 75%; width:75%;"/></center></a></p>
 
