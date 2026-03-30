@@ -25,7 +25,7 @@ export class PatientService {
     email: "example@domain.com",
     phone: 1234567890,
     dni: 12345678,
-    visitList: [] // Lista de visitas asociadas al paciente
+    visits: [] // Lista de visitas asociadas al paciente
   };
 
   public visitView: Visit ={
@@ -49,7 +49,7 @@ export class PatientService {
   }
 
   getPatientsByName(name: string): Observable<Patient[]> {
-    
+
     console.log(`${this.endPoint}${this.apiUrl}search?name=${name}`)
     return this.http.get<Patient[]>(`${this.endPoint}${this.apiUrl}search?name=${name}`);
   }
@@ -59,7 +59,7 @@ export class PatientService {
   }
 
 
-  
+
 //metodos POST/DELETE/PUT------------------------------------------------------
 
   createPatient(patient: Patient): Observable<number> {
@@ -99,7 +99,7 @@ export class PatientService {
   }
 
   deleteVisit(id: number): Observable<String>{
-    
+
     return this.http.delete<String>(`${this.endPoint}${this.apiUrlVisit}delete/${id}`, {
       responseType: 'text' as 'json'
     });

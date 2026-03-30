@@ -29,7 +29,7 @@ export class VisitListComponent {
     })
   }
 
-  
+
   changePatientId(id: number):void{
     this._patientService.patientId = id;
     console.log(this._patientService.patientId)
@@ -41,14 +41,14 @@ export class VisitListComponent {
       this.toastr.warning(`Visita eliminada correctamente`, "ClinicData");
       console.log(idP)
       this.getPatientView(idP)
-    })   
+    })
   }
 
   getPatientView(id: number){
     this._patientService.getPatientById(id).subscribe((response: Patient) =>{
       this._patientService.patientView = response;
 
-      this._patientService.patientView.visitList.sort((a, b) => {
+      this._patientService.patientView.visits.sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
 

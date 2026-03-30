@@ -59,14 +59,14 @@ export class VisitFormAddEditComponent {
         date: response.date,
         description: response.description,
         treatment: response.treatment,
-        patientId: this.patientId 
+        patientId: this.patientId
       });
       this.loading = false;
     });
   }
 
-  
-  
+
+
   createVisit() {
     this.loading = true;
     const visit: Visit = {
@@ -92,9 +92,9 @@ export class VisitFormAddEditComponent {
           this._patientService.getPatientById(this._patientService.patientView.id!).subscribe((response: Patient) =>{
             this._patientService.patientView = response;
 
-            this._patientService.patientView.visitList.sort((a, b) => {
+            this._patientService.patientView.visits.sort((a, b) => {
               return new Date(b.date).getTime() - new Date(a.date).getTime();
-            });      
+            });
 
           })
         this.router.navigate(['/']);
@@ -117,9 +117,9 @@ export class VisitFormAddEditComponent {
               this._patientService.getPatientById(this._patientService.patientView.id!).subscribe((response: Patient) =>{
                 this._patientService.patientView = response;
 
-                this._patientService.patientView.visitList.sort((a, b) => {
+                this._patientService.patientView.visits.sort((a, b) => {
                   return new Date(b.date).getTime() - new Date(a.date).getTime();
-                });          
+                });
 
               })
               this.router.navigate(['/']);
@@ -127,7 +127,7 @@ export class VisitFormAddEditComponent {
     }
   }
 
-  
+
 
 
 }

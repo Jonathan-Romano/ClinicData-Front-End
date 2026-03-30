@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     RouterModule,
     ProgressBarComponent,
-    DniFormatPipe 
+    DniFormatPipe
   ],
   templateUrl: './patient-list.component.html',
   styleUrl: './patient-list.component.css'
@@ -50,7 +50,7 @@ export class PatientListComponent {
     this._patientService.getPatientById(id).subscribe((response: Patient) =>{
       this._patientService.patientView = response;
 
-      this._patientService.patientView.visitList.sort((a, b) => {
+      this._patientService.patientView.visits.sort((a, b) => {
         return new Date(b.date).getTime() - new Date(a.date).getTime();
       });
 
@@ -80,10 +80,10 @@ export class PatientListComponent {
         email: "example@domain.com",
         phone: 1234567890,
         dni: 12345678,
-        visitList: [] // Lista de visitas asociadas al paciente
+        visits: [] // Lista de visitas asociadas al paciente
       };
       this.toastr.warning(`Paciente eliminado correctamente`, "ClinicData");
-      this.getListPatients(); // Actualiza la lista de pacientes después de la eliminación     
+      this.getListPatients(); // Actualiza la lista de pacientes después de la eliminación
     });
   }
 

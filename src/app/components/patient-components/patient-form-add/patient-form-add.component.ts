@@ -76,13 +76,13 @@ export class PatientFormComponent {
       dni: this.patientForm.value.dni,
       email: this.patientForm.value.email,
       phone: this.patientForm.value.phone,
-      visitList: []
+      visits: []
     }
      if (this.id != 0){
       //es Editar
       patient.id=this.id;
       this._patientService.getPatientById(patient.id).subscribe((response: Patient) => {
-        patient.visitList = response.visitList;
+        patient.visits = response.visits;
         this._patientService.updatePatient(patient).subscribe((response: Patient) =>{
           this.toastr.info(`Paciente ${patient.name} actualizado correctamente`, "ClinicData");
           this.loading = false;

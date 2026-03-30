@@ -8,5 +8,5 @@ import { Visit } from "./visit";
     email: string;
     phone: number;
     dni: number;
-    visitList: Visit[]; // Lista de visitas asociadas al paciente
+    visits: Visit[]; // Lista de visitas asociadas al paciente
   }
