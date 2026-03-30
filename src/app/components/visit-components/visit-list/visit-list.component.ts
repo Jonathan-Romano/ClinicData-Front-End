@@ -20,6 +20,10 @@ export class VisitListComponent {
   public _patientService= inject(PatientService);
   private toastr= inject(ToastrService);
 
+  //Paginado
+  public currentPage: number = 1;
+  public pageSize: number = 6;
+
 
   getVisitView(id: number){
     this._patientService.getVisitById(id).subscribe((response: Visit) =>{
@@ -35,14 +39,17 @@ export class VisitListComponent {
     console.log(this._patientService.patientId)
   }
 
-  deleteVisit(id: number, idP: number){
-    console.log("click")
-    this._patientService.deleteVisit(id).subscribe((response: String) =>{
-      this.toastr.warning(`Visita eliminada correctamente`, "ClinicData");
-      console.log(idP)
-      this.getPatientView(idP)
-    })
-  }
+  deleteVisit(id: number, patientId: number) {
+    this._patientService.deleteVisit(id).subscribe(() => {
+
+      // actualizar lista (como ya lo hacés)
+      this._patientService.patientView.visits =
+        this._patientService.patientView.visits.filter(v => v.id !== id);
+
+      // 🔥 CLAVE: ajustar paginado
+      this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
+    });
+}
 
   getPatientView(id: number){
     this._patientService.getPatientById(id).subscribe((response: Patient) =>{
@@ -61,12 +68,44 @@ export class VisitListComponent {
         date: '',
         description: '',
         treatment: '',
-        patient:{
+        patientId:{
           id: 0
         }
       }
     })
   }
+   //Paginado
+    get totalPages(): number {
+      return Math.ceil(this._patientService.patientView.visits.length / this.pageSize);
+    }
+
+    get totalPagesArray(): number[] {
+      return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    }
+
+    get paginatedVisits() {
+      const visits = this._patientService.patientView.visits || [];
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return visits.slice(start, end);
+    }
+
+    goToPage(page: number): void {
+      this.currentPage = page;
+    }
+
+    nextPage(): void {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+    }
+
+    previousPage(): void {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+    }
+
 
 }
 

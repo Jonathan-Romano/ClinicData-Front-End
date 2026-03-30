@@ -4,10 +4,8 @@
     <div
       class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
     >
-      <!-- Título de la cabecera alineado a la izquierda -->
       <span><strong>Detalles del Paciente</strong></span>
 
-      <!-- Botón alineado a la derecha -->
       <div class="btn-group" *ngIf="_patientService.patientView.id != 0">
         <button
           type="button"
@@ -18,34 +16,59 @@
         </button>
       </div>
     </div>
+
     <div class="card-body p-4">
-      <!-- Contenedor de detalles del paciente -->
-      <div class="mb-3 border-bottom pb-2">
-        <h6 class="text-primary  mb-1">Nombre:</h6>
-        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.name }}</p>
+      <!-- Fila 1 -->
+      <div class="row mb-3 border-bottom pb-3">
+        <div class="col-md-6 mb-3 mb-md-0">
+          <h6 class="text-primary mb-1">Nombre</h6>
+          <p class="fs-5 text-muted mb-0">
+            {{ _patientService.patientView.name }}
+          </p>
+        </div>
+
+        <div class="col-md-6">
+          <h6 class="text-primary mb-1">Apellido</h6>
+          <p class="fs-5 text-muted mb-0">
+            {{ _patientService.patientView.lastName }}
+          </p>
+        </div>
       </div>
-    
-      <div class="mb-3 border-bottom pb-2">
-        <h6 class="text-primary mb-1">Apellido:</h6>
-        <p class="fs-5 text-muted  mb-0">{{ _patientService.patientView.lastName }}</p>
+
+      <!-- Fila 2 -->
+      <div class="row mb-3 border-bottom pb-3">
+        <div class="col-md-6 mb-3 mb-md-0">
+          <h6 class="text-primary mb-1">DNI</h6>
+          <p class="fs-5 text-muted mb-0">
+            {{ _patientService.patientView.dni | dniFormat }}
+          </p>
+        </div>
+        <div class="col-md-6">
+          <h6 class="text-primary mb-1">Direccion</h6>
+          <p class="fs-5 text-muted mb-0">
+            {{ _patientService.patientView.address}}
+          </p>
+        </div>
+
       </div>
-    
-      <div class="mb-3 border-bottom pb-2">
-        <h6 class="text-primary  mb-1">DNI:</h6>
-        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.dni | dniFormat }}</p>
-      </div>
-    
-      <div class="mb-3 border-bottom pb-2">
-        <h6 class="text-primary mb-1">Email:</h6>
-        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.email }}</p>
-      </div>
-    
-      <div class="mb-3">
-        <h6 class="text-primary  mb-1">Teléfono:</h6>
-        <p class="fs-5 text-muted mb-0">{{ _patientService.patientView.phone | phoneFormat }}</p>
+
+      <!-- Fila 3 -->
+      <div class="row">
+        <div class="col-12">
+          <h6 class="text-primary mb-1">Mail</h6>
+          <p class="fs-5 text-muted mb-0">
+            {{ _patientService.patientView.email }}
+          </p>
+        </div>
+
+        <div class="col-md-6">
+          <h6 class="text-primary mb-1">Celular</h6>
+          <p class="fs-5 text-muted mb-0">
+            {{ _patientService.patientView.phone | phoneFormat }}
+          </p>
+        </div>
       </div>
     </div>
-    
   </div>
 
   <!-- Lista de Visitas -->

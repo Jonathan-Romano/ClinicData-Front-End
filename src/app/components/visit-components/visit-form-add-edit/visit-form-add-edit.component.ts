@@ -24,110 +24,108 @@ export class VisitFormAddEditComponent {
   private router = inject(Router);
   private toastr= inject(ToastrService);
 
-  public patientId:number = this._patientService.patientId;
+  public patientId: number = 0;
+  public visitId: number = 0;
+  public operacion: string = 'Crear';
 
   visitForm: FormGroup;
 
   loading: boolean = false;
-  operacion: string = 'Crear';
-  id: number;
+
 
   constructor(private fb: FormBuilder, private aRouter: ActivatedRoute) {
     // Inicializar el formulario del paciente
     this.visitForm = this.fb.group({
-      date: ['', Validators.required],
-      description: ['', Validators.required],
-      treatment: ['', Validators.required],
-      patientId: ['']
+          date: ['', Validators.required],
+          description: ['', Validators.required],
+          treatment: ['', Validators.required]
     });
-    this.id = Number(aRouter.snapshot.paramMap.get('id'));
   }
 
   ngOnInit(): void {
-    if (this.id != 0) {
-      //console.log(this.id != 0)
-      this.operacion = 'Editar ';
-      this.getVisit(this.id);
+    const patientIdParam = this.aRouter.snapshot.paramMap.get('patientId');
+    const visitIdParam = this.aRouter.snapshot.paramMap.get('visitId');
+
+    if (patientIdParam) {
+      this.patientId = Number(patientIdParam);
+      this.operacion = 'Crear';
+      console.log('Paciente:', this.patientId);
+    }
+
+    if (visitIdParam) {
+      this.visitId = Number(visitIdParam);
+      this.operacion = 'Editar';
+      console.log('Visita:', this.visitId);
+
+      this.getVisit(this.visitId);
     }
   }
 
   getVisit(id: number) {
     this.loading = true;
+
     this._patientService.getVisitById(id).subscribe((response: Visit) => {
-      //console.log(response)
-      this.visitForm.setValue({
+      this.visitForm.patchValue({
         date: response.date,
         description: response.description,
-        treatment: response.treatment,
-        patientId: this.patientId
+        treatment: response.treatment
       });
+
+      if (response.patientId?.id) {
+        this.patientId = response.patientId.id;
+      }
+
       this.loading = false;
     });
   }
 
 
+createVisit() {
+  this.loading = true;
 
-  createVisit() {
-    this.loading = true;
-    const visit: Visit = {
-      date: this.visitForm.value.date,
-      description: this.visitForm.value.description,
-      treatment: this.visitForm.value.treatment,
-      id: this.visitForm.value.patientId,
-      patient: { id: this.visitForm.value.patientId }
-    };
-    if (this.id != 0) {
-      //es Editar
-      visit.id = this.id;
-      this._patientService.updateVisit(visit).subscribe((response: Visit) => {
+  const visit: Visit = {
+    date: this.visitForm.value.date,
+    description: this.visitForm.value.description,
+    treatment: this.visitForm.value.treatment,
+    patientId: { id: this.patientId } // ✅ CORRECTO
+  };
 
-        this.toastr.info(`Visita del ${visit.date} actualizado correctamente`, "ClinicData");
+  if (this.visitId != 0) {
+    // EDITAR
+    visit.id = this.visitId;
+
+    this._patientService.updateVisit(visit).subscribe({
+      next: (response: Visit) => {
+        this.toastr.info(`Visita del ${visit.date} actualizada correctamente`, 'ClinicData');
         this.loading = false;
-
-        this._patientService
-          .getVisitById(this.id)
-          .subscribe((response: Visit) => {
-            this._patientService.visitView = response;
-          });
-          this._patientService.getPatientById(this._patientService.patientView.id!).subscribe((response: Patient) =>{
-            this._patientService.patientView = response;
-
-            this._patientService.patientView.visits.sort((a, b) => {
-              return new Date(b.date).getTime() - new Date(a.date).getTime();
-            });
-
-          })
         this.router.navigate(['/']);
-      });
-    } else {
-      console.log("paciente: "+ this._patientService.patientView.id!)
+      },
+      error: (error) => {
+        this.loading = false;
+        console.error(error);
+      }
+    });
 
-      visit.patient.id = this._patientService.patientView.id!;
+  } else {
+    // CREAR
+    this._patientService.createVisit(this.patientId, visit).subscribe({
+      next: (response: number) => {
 
-      console.log("Visit: "+ visit.patient.id)
+        this._patientService.getPatientById(this.patientId).subscribe((response: Patient) => {
+          this._patientService.patientView = response;
+        });
 
-      this._patientService
-        .createVisit(visit)
-        .subscribe((response: number) => {
-              //console.log(response);
-
-              this.toastr.success(`Visita del ${visit.date} guardada correctamente`, "ClinicData");
-              this.loading = false;
-
-              this._patientService.getPatientById(this._patientService.patientView.id!).subscribe((response: Patient) =>{
-                this._patientService.patientView = response;
-
-                this._patientService.patientView.visits.sort((a, b) => {
-                  return new Date(b.date).getTime() - new Date(a.date).getTime();
-                });
-
-              })
-              this.router.navigate(['/']);
-        })
-    }
+        this.toastr.success(`Visita del ${visit.date} guardada correctamente`, 'ClinicData');
+        this.loading = false;
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        this.loading = false;
+        console.error(error);
+      }
+    });
   }
-
-
+}
 
 
 }

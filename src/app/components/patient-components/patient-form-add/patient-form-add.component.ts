@@ -40,7 +40,13 @@ export class PatientFormComponent {
       lastName: ['', Validators.required],
       dni: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', Validators.required]
+      phone:  [
+                 '',
+                 [
+                   Validators.required,
+                   Validators.pattern(/^\d{10}$/)
+                 ]
+               ]
     });
     this.id = Number(aRouter.snapshot.paramMap.get('id'));
   }
@@ -68,39 +74,52 @@ export class PatientFormComponent {
     })
   }
 
-  createPatient(){
-    this.loading = true;
-    const patient: Patient = {
-      name: this.patientForm.value.name,
-      lastName: this.patientForm.value.lastName,
-      dni: this.patientForm.value.dni,
-      email: this.patientForm.value.email,
-      phone: this.patientForm.value.phone,
-      visits: []
-    }
-     if (this.id != 0){
-      //es Editar
-      patient.id=this.id;
-      this._patientService.getPatientById(patient.id).subscribe((response: Patient) => {
-        patient.visits = response.visits;
-        this._patientService.updatePatient(patient).subscribe((response: Patient) =>{
-          this.toastr.info(`Paciente ${patient.name} actualizado correctamente`, "ClinicData");
-          this.loading = false;
-          this._patientService.getPatientById(this.id).subscribe((response: Patient) =>{
-            this._patientService.patientView = response;
-          })
-          this.router.navigate(['/']);
-        })
-      });
-    } else{
-      //es agregar
-      this._patientService.createPatient(patient).subscribe((response: number) => {
-        this.toastr.success(`Paciente ${patient.name} guardado correctamente`, "ClinicData");
-        this.loading = false;
-        this.router.navigate(['/']);
-      });
-    }
-  }
+ createPatient() {
+   this.loading = true;
+
+   const patient: Patient = {
+     name: this.patientForm.value.name,
+     lastName: this.patientForm.value.lastName,
+     dni: this.patientForm.value.dni,
+     email: this.patientForm.value.email,
+     address: this.patientForm.value.address,
+     phone: this.patientForm.value.phone,
+     visits: []
+   };
+
+   if (this.id != 0) {
+     patient.id = this.id;
+
+     this._patientService.updatePatient(patient).subscribe({
+       next: (response: Patient) => {
+         this.toastr.info(`Paciente ${patient.name} actualizado correctamente`, 'ClinicData');
+         this.loading = false;
+
+         this._patientService.getPatientById(this.id).subscribe((response: Patient) => {
+           this._patientService.patientView = response;
+         });
+
+         this.router.navigate(['/']);
+       },
+       error: (error) => {
+         this.loading = false;
+         console.error(error);
+       }
+     });
+   } else {
+     this._patientService.createPatient(patient).subscribe({
+       next: (response: number) => {
+         this.toastr.success(`Paciente ${patient.name} guardado correctamente`, 'ClinicData');
+         this.loading = false;
+         this.router.navigate(['/']);
+       },
+       error: (error) => {
+         this.loading = false;
+         console.error(error);
+       }
+     });
+   }
+ }
 
 
 }

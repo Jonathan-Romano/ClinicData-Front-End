@@ -6,6 +6,7 @@ import { Visit } from "./visit";
     name: string;
     lastName: string;
     email: string;
+    address: string;
     phone: number;
     dni: number;
     visits: Visit[]; // Lista de visitas asociadas al paciente

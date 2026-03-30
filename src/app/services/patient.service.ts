@@ -23,6 +23,7 @@ export class PatientService {
     name: "del Paciente",
     lastName: "del Paciente",
     email: "example@domain.com",
+    address: "Direccion",
     phone: 1234567890,
     dni: 12345678,
     visits: [] // Lista de visitas asociadas al paciente
@@ -33,7 +34,7 @@ export class PatientService {
     date: '',
     description: '',
     treatment: '',
-    patient: {
+    patientId: {
       id: 0,
     }
   }
@@ -49,8 +50,6 @@ export class PatientService {
   }
 
   getPatientsByName(name: string): Observable<Patient[]> {
-
-    console.log(`${this.endPoint}${this.apiUrl}search?name=${name}`)
     return this.http.get<Patient[]>(`${this.endPoint}${this.apiUrl}search?name=${name}`);
   }
 
@@ -81,29 +80,28 @@ export class PatientService {
   }
 
 
-  //METODOS DE VISITAS
-  getVisitById(id: number): Observable<Visit> {
-    return this.http.get<Visit>(`${this.endPoint}${this.apiUrlVisit}${id}`)
-  }
+ // METODOS DE VISITAS
 
-  createVisit(visit: Visit): Observable<number> {
-    return this.http.post<number>(`${this.endPoint}${this.apiUrlVisit}create`, visit, {
-      responseType: 'text' as 'json'
-    });
-  }
+ getVisitById(id: number): Observable<Visit> {
+   return this.http.get<Visit>(`${this.endPoint}${this.apiUrlVisit}${id}`);
+ }
 
-  updateVisit(visit: Visit): Observable<Visit> {
-    return this.http.put<Visit>(`${this.endPoint}${this.apiUrlVisit}edit/${visit.id}`, visit, {
-      responseType: 'text' as 'json'
-    });
-  }
+ createVisit(patientId: number, visit: Visit): Observable<number> {
+   return this.http.post<number>(
+     `${this.endPoint}${this.apiUrlVisit}create/${patientId}`,
+     visit
+   );
+ }
 
-  deleteVisit(id: number): Observable<String>{
+ updateVisit(visit: Visit): Observable<Visit> {
+   return this.http.put<Visit>(`${this.endPoint}${this.apiUrlVisit}edit/${visit.id}`, visit);
+ }
 
-    return this.http.delete<String>(`${this.endPoint}${this.apiUrlVisit}delete/${id}`, {
-      responseType: 'text' as 'json'
-    });
-  }
+ deleteVisit(id: number): Observable<string> {
+   return this.http.delete(`${this.endPoint}${this.apiUrlVisit}delete/${id}`, {
+     responseType: 'text'
+   });
+ }
 
 
 }

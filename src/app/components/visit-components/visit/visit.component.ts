@@ -24,7 +24,7 @@ export class VisitComponent {
 
   deleteVisit(id: number): void {
     this._patientService.deleteVisit(id).subscribe((response: String)=>{
-    
+
     });
   }
 
@@ -34,7 +34,7 @@ export class VisitComponent {
       date: '',
       description: '',
       treatment: '',
-      patient: {
+      patientId: {
         id: 0
       }
     }

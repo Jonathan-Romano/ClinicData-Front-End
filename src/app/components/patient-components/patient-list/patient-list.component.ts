@@ -22,6 +22,8 @@ import { ToastrService } from 'ngx-toastr';
 export class PatientListComponent {
   public _patientService = inject(PatientService);
   loading: boolean = false;
+  public currentPage: number = 1;
+  public pageSize: number = 13;
 
   constructor(private toastr: ToastrService){};
 
@@ -29,21 +31,27 @@ export class PatientListComponent {
     this.getListPatients();
    }
 
-   getListPatients(){
+  getListPatients() {
     this.loading = true;
-    this._patientService.getPatients().subscribe((response: Patient[])=>{
-      console.log(response)
-      this._patientService.patients = response.sort((a, b) => {
-        // Convertir a minúsculas para evitar problemas con las mayúsculas
-        return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
-      });
 
-      this.loading = false;
-    },
-    error => {
-      console.error("Error al obtener los productos:", error); // Verifica si hay algún error
-    }
-  );
+    this._patientService.getPatients().subscribe(
+      (response: Patient[]) => {
+        this._patientService.patients = response.sort((a, b) => {
+          return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+        });
+
+        // Ajustar la página actual después de actualizar la lista
+        if (this.currentPage > this.totalPages) {
+          this.currentPage = this.totalPages || 1;
+        }
+
+        this.loading = false;
+      },
+      error => {
+        console.error("Error al obtener los productos:", error);
+        this.loading = false;
+      }
+    );
   }
 
   getPatientView(id: number){
@@ -64,7 +72,7 @@ export class PatientListComponent {
         date: '',
         description: '',
         treatment: '',
-        patient:{
+        patientId:{
           id: 0
         }
       }
@@ -78,6 +86,7 @@ export class PatientListComponent {
         name: " del Paciente",
         lastName: " del Paciente",
         email: "example@domain.com",
+        address: "Direccion",
         phone: 1234567890,
         dni: 12345678,
         visits: [] // Lista de visitas asociadas al paciente
@@ -85,6 +94,35 @@ export class PatientListComponent {
       this.toastr.warning(`Paciente eliminado correctamente`, "ClinicData");
       this.getListPatients(); // Actualiza la lista de pacientes después de la eliminación
     });
+
   }
 
+get totalPages(): number {
+  return Math.ceil(this._patientService.patients.length / this.pageSize);
 }
+
+get totalPagesArray(): number[] {
+  return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+}
+
+get paginatedPatients() {
+  const start = (this.currentPage - 1) * this.pageSize;
+  const end = start + this.pageSize;
+  return this._patientService.patients.slice(start, end);
+}
+
+goToPage(page: number): void {
+  this.currentPage = page;
+}
+
+nextPage(): void {
+  if (this.currentPage < this.totalPages) {
+    this.currentPage++;
+  }
+}
+
+previousPage(): void {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}}

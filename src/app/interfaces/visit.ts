@@ -1,15 +1,14 @@
 // Interface para representar una visita médica
-interface patientId{
+interface patientID{
     id:number;
 }
 
 export interface Visit {
-    id: number;
+    id?: number;
     date: string; // Representación de LocalDate en formato string (e.g., 'YYYY-MM-DD')
     description: string;
     treatment: string;
-    patient: patientId; 
+    patientId: patientID;
 }
-  
 
-  
+
