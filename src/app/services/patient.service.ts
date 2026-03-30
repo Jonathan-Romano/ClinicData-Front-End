@@ -48,15 +48,21 @@ export class PatientService {
   getPatients(): Observable<Patient[]> {
     return this.http.get<Patient[]>(`${this.endPoint}${this.apiUrl}list`);
   }
-
-  getPatientsByName(name: string): Observable<Patient[]> {
-    return this.http.get<Patient[]>(`${this.endPoint}${this.apiUrl}search?name=${name}`);
-  }
-
   getPatientById(id: number): Observable<Patient> {
     return this.http.get<Patient>(`${this.endPoint}${this.apiUrl}${id}`)
   }
 
+  getPatientsByName(name: string): Observable<Patient[]> {
+    return this.http.get<Patient[]>(`${this.endPoint}${this.apiUrl}search`, {
+      params: { name }
+    });
+  }
+
+  getPatientByDni(dni: number): Observable<Patient[]> {
+    return this.http.get<Patient[]>(`${this.endPoint}${this.apiUrl}search`, {
+      params: { dni }
+    });
+  }
 
 
 //metodos POST/DELETE/PUT------------------------------------------------------
